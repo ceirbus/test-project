@@ -1,0 +1,9 @@
+.view-port {
+    position: absolute;
+    top: 200px;
+    left: 200px;
+    width: 800px;
+    height: 500px;
+    overflow: hidden;
+    background: white;
+}
