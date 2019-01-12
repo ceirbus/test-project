@@ -1,11 +1,15 @@
 import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 
+const ONE_SECOND: number = 1000;
+
 @Component({
   selector: 'content-scroll',
   templateUrl: './content-scroll.component.html',
   styleUrls: ['./content-scroll.component.css']
 })
+
 export class ContentScrollComponent implements AfterContentInit, OnDestroy {
+  
 
   public hasVerticalScroll: boolean = false;
   public hasHorizontalScroll: boolean = false;
@@ -17,12 +21,15 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
 
   constructor() {
     this.observer = new MutationObserver((mutations) => {
-      this.initScroll();
+        this.initScroll();
     });
   }
 
   public ngAfterContentInit() {
-    this.initScroll();
+    // set timeout if content appears slow to render
+    setTimeout(() => {
+      this.initScroll();
+    }, this.isContentSlowToRender() ? ONE_SECOND : 0);
     this.initObserver();
   }
 
@@ -37,6 +44,17 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
     this.hasVerticalScroll = this.content.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
     this.hasHorizontalScroll = this.content.nativeElement.scrollHeight > this.wrapper.nativeElement.clientHeight;
   }
+
+  /**
+   * Method to determine if the content is slow/not loading by checking height and width
+   * @returns {boolean} value to determine if height/width is 0
+   */
+  public isContentSlowToRender(): boolean {
+    const noWidthLoaded = this.content.nativeElement.scrollWidth == 0;
+    const noHeightLoaded = this.content.nativeElement.scrollHeight == 0;
+
+    return noWidthLoaded || noHeightLoaded;
+  } 
 
   /**
    * Method to initialize the MutationObserver that detects changes to the content and updates the controls
