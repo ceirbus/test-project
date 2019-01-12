@@ -1,7 +1,7 @@
-<div class="wrapper" 
-      #wrapper 
+<div class="wrapper"
+      #wrapper
       [ngClass]="{
-        'verticalScrollArea': hasVerticalScroll, 
+        'verticalScrollArea': hasVerticalScroll,
         'horizontalScrollArea': hasHorizontalScroll
       }">
   <div class="content" #content>
@@ -12,10 +12,10 @@
   <div>
     <div class="upControls">
       <button (click)="scrollTopEdge()">>></button>
-      <button>></button>
+      <button (click)="scrollTop()">></button>
     </div>
     <div class="downControls">
-      <button><</button>
+      <button (click)="scrollBottom()"><</button>
       <button (click)="scrollBottomEdge()"><<</button>
     </div>
   </div>
@@ -24,10 +24,10 @@
   <div>
     <div class="leftControls">
       <button (click)="scrollLeftEdge()"><<</button>
-      <button><</button>
+      <button (click)="scrollLeft()"><</button>
     </div>
     <div class="rightControls">
-      <button>> </button>
+      <button (click)="scrollRight()">> </button>
       <button (click)="scrollRightEdge()">>></button>
     </div>
   </div>
