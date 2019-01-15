@@ -10,17 +10,16 @@ const ONE_SECOND: number = 1000;
 
 export class ContentScrollComponent implements AfterContentInit, OnDestroy {
   
-
   public hasVerticalScroll: boolean = false;
   public hasHorizontalScroll: boolean = false;
 
-  public observer: MutationObserver;
+  public mutationObserver: MutationObserver;
 
   @ViewChild('content') content: ElementRef;
   @ViewChild('wrapper') wrapper: ElementRef;
 
   constructor() {
-    this.observer = new MutationObserver((mutations) => {
+    this.mutationObserver = new MutationObserver(() => {
         this.initScroll();
     });
   }
@@ -34,7 +33,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.observer.disconnect();
+    this.mutationObserver.disconnect();
   }
 
   /**
@@ -50,8 +49,8 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
    * @returns {boolean} value to determine if height/width is 0
    */
   public isContentSlowToRender(): boolean {
-    const noWidthLoaded = this.content.nativeElement.scrollWidth == 0;
-    const noHeightLoaded = this.content.nativeElement.scrollHeight == 0;
+    const noWidthLoaded = this.content.nativeElement.scrollWidth === 0;
+    const noHeightLoaded = this.content.nativeElement.scrollHeight === 0;
 
     return noWidthLoaded || noHeightLoaded;
   } 
