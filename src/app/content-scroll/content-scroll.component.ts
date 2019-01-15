@@ -66,7 +66,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
     }
 
     try {
-      this.observer.observe(this.content.nativeElement, config);
+      this.mutationObserver.observe(this.content.nativeElement, config);
     } catch(error) {
       console.log("Error creating observer: ", error);
     }
