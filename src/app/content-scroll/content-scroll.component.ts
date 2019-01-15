@@ -29,7 +29,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
     setTimeout(() => {
       this.initScroll();
     }, this.isContentSlowToRender() ? ONE_SECOND : 0);
-    this.initObserver();
+    this.initMutationObserver();
   }
 
   public ngOnDestroy() {
@@ -58,7 +58,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
   /**
    * Method to initialize the MutationObserver that detects changes to the content and updates the controls
    */
-  public initObserver(): void {
+  public initMutationObserver(): void {
     const config: MutationObserverInit = {
       attributes: true,
       childList: true,
