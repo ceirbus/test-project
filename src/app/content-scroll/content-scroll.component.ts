@@ -9,7 +9,8 @@ const ONE_SECOND: number = 1000;
 })
 
 export class ContentScrollComponent implements AfterContentInit, OnDestroy {
-  
+  public isTouchDevice: boolean = 'ontouchstart' in window;
+
   public hasVerticalScroll: boolean = false;
   public hasHorizontalScroll: boolean = false;
 
@@ -24,14 +25,14 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
     });
   }
 
-  public ngAfterContentInit() {
+  public ngAfterContentInit(): void {
     // set timeout if content appears slow to render
     this.initScroll();
 
     this.initMutationObserver();
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.mutationObserver.disconnect();
   }
 
@@ -40,8 +41,8 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
    */
   public initScroll(): void {
     setTimeout(() => {
-      this.hasVerticalScroll = this.content.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
-      this.hasHorizontalScroll = this.content.nativeElement.scrollHeight > this.wrapper.nativeElement.clientHeight;
+      this.hasHorizontalScroll = this.content.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
+      this.hasVerticalScroll = this.content.nativeElement.scrollHeight > this.wrapper.nativeElement.clientHeight;
     }, this.isContentSlowToRender() ? ONE_SECOND : 0);
   }
 

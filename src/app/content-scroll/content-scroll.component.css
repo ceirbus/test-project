@@ -16,9 +16,22 @@
 }
 
 .wrapper::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+    width: .7em;
+    height: .7em;
+    background-color: darkgray;
 }
+
+.wrapper::-webkit-scrollbar-thumb {
+    background-color: gray;
+    border-radius: 1em;
+}
+
+.wrapper::-webkit-scrollbar-corner {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
 
 .content {
     display: flex;
