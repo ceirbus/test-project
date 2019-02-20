@@ -26,9 +26,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
   }
 
   public ngAfterContentInit(): void {
-    // set timeout if content appears slow to render
     this.initScroll();
-
     this.initMutationObserver();
   }
 
@@ -37,7 +35,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Method to initialize the scroll components when the content is updated
+   * Method to initialize the scroll components when the content is updated, set timeout if content is slow to render
    */
   public initScroll(): void {
     setTimeout(() => {
@@ -47,7 +45,8 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Method to determine if the content is slow/not loading by checking height and width
+   * Method to determine if the content is slow/not loading quickly by checking height and width.
+   * This could mean that no content is inside the element but it is optimistic to think there should be content
    * @returns {boolean} value to determine if height/width is 0
    */
   public isContentSlowToRender(): boolean {
