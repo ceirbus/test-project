@@ -1,10 +1,10 @@
 <div class="wrapper"
-      #wrapper
-      [ngClass]="{
-        'verticalScrollArea': hasVerticalScroll,
-        'horizontalScrollArea': hasHorizontalScroll,
-        'hideScrollBars': isTouchDevice
-      }">
+  #wrapper
+  [ngClass]="{
+    'verticalScrollArea': hasVerticalScroll,
+    'horizontalScrollArea': hasHorizontalScroll,
+    'hideScrollBars': isTouchDevice
+  }">
   <div class="content" #content>
     <ng-content></ng-content>
   </div>
