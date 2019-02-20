@@ -32,6 +32,9 @@
     border: none;
 }
 
+.hideScrollBars::-webkit-scrollbar {
+    display: none;
+}
 
 .content {
     display: flex;
