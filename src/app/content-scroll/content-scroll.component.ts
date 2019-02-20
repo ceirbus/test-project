@@ -26,9 +26,8 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
 
   public ngAfterContentInit() {
     // set timeout if content appears slow to render
-    setTimeout(() => {
-      this.initScroll();
-    }, this.isContentSlowToRender() ? ONE_SECOND : 0);
+    this.initScroll();
+
     this.initMutationObserver();
   }
 
@@ -40,8 +39,10 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
    * Method to initialize the scroll components when the content is updated
    */
   public initScroll(): void {
-    this.hasVerticalScroll = this.content.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
-    this.hasHorizontalScroll = this.content.nativeElement.scrollHeight > this.wrapper.nativeElement.clientHeight;
+    setTimeout(() => {
+      this.hasVerticalScroll = this.content.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
+      this.hasHorizontalScroll = this.content.nativeElement.scrollHeight > this.wrapper.nativeElement.clientHeight;
+    }, this.isContentSlowToRender() ? ONE_SECOND : 0);
   }
 
   /**
@@ -51,7 +52,6 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
   public isContentSlowToRender(): boolean {
     const noWidthLoaded = this.content.nativeElement.scrollWidth === 0;
     const noHeightLoaded = this.content.nativeElement.scrollHeight === 0;
-
     return noWidthLoaded || noHeightLoaded;
   } 
 
