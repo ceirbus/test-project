@@ -126,4 +126,11 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
   public scrollRight(): void {
     this.wrapper.nativeElement.scrollLeft += this.wrapper.nativeElement.clientWidth;
   }
+
+  /**
+   * for demo only
+   */
+  public toggleTouch() {
+    this.isTouchDevice = !this.isTouchDevice;
+  }
 }

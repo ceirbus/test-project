@@ -25,7 +25,7 @@ export class AppComponent {
       }
       default: {
          this.iterator = 0;
-         this.filler = '<div style="height: 5000px; width: 5000px; background: red;"></div>';
+         this.filler = '<div style="height: 5000px; width: 5000px; background: red; background-image: radial-gradient(white, gray, black, red, blue, yellow);"></div>';
          break;
       }
    } 
