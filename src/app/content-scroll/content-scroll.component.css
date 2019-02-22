@@ -33,7 +33,8 @@
 }
 
 .hideScrollBars::-webkit-scrollbar {
-    display: none;
+    width: .2em;
+    height: .2em;
 }
 
 .content {
