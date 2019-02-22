@@ -9,8 +9,9 @@
     <ng-content></ng-content>
   </div>
 </div>
-<div class='verticalButtons' *ngIf="hasVerticalScroll && isTouchDevice"
-[ngClass]="{'extendVerticalControls': !hasHorizontalScroll}">
+<div class='verticalButtons'
+  *ngIf="hasVerticalScroll && isTouchDevice"
+  [ngClass]="{'extendVerticalControls': !hasHorizontalScroll}">
   <div>
     <div class="upControls">
       <button (click)="scrollTopEdge()" >>></button>
@@ -22,8 +23,9 @@
     </div>
   </div>
 </div>
-<div class='horizontalButtons' *ngIf="hasHorizontalScroll && isTouchDevice"
-[ngClass]="{'extendHorizontalControls': !hasVerticalScroll}">
+<div class='horizontalButtons'
+  *ngIf="hasHorizontalScroll && isTouchDevice"
+  [ngClass]="{'extendHorizontalControls': !hasVerticalScroll}">
   <div>
     <div class="leftControls">
       <button (click)="scrollLeftEdge()"><<</button>
