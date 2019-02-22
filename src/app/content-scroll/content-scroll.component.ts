@@ -41,7 +41,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
     setTimeout(() => {
       this.hasHorizontalScroll = this.content.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
       this.hasVerticalScroll = this.content.nativeElement.scrollHeight > this.wrapper.nativeElement.clientHeight;
-    }, this.isContentSlowToRender() ? ONE_SECOND : 0);
+    }, this.isContentSlowToRender() ? 0 : 0);
   }
 
   /**

@@ -18,7 +18,7 @@
 .wrapper::-webkit-scrollbar {
     width: .7em;
     height: .7em;
-    background-color: darkgray;
+    background: transparent;
 }
 
 .wrapper::-webkit-scrollbar-thumb {
@@ -44,16 +44,24 @@
 
 .verticalScrollArea {
     width: calc(100% - 60px);
-    margin-right: 59px;
+    margin-right: 58px;
     border-left: 1px solid black;
     border-right: 1px solid black;
 }
 
 .horizontalScrollArea {
     height: calc(100% - 60px);
-    margin-bottom: 59px;
+    margin-bottom: 58px;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
+}
+
+.extendVerticalControls {
+    height: 100% !important;
+}
+
+.extendHorizontalControls {
+    width: 100% !important;
 }
 
 .verticalButtons {
