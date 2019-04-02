@@ -1,16 +1,15 @@
-<!-- put whatever in this view port and you will be able to scroll but the scrollbars will be hidden,
-the viewport will grow to the size of the content without overflowing-->
-<div class="view-port">
-  <content-scroll #contentScroll>
-    <div style="height: 5000px; width: 5000px; background: red; background-image: radial-gradient(white, gray, black, red, blue, yellow);"></div>
-  </content-scroll>
-</div>
-<div>
-  Ignore the crappy test method with the uber long strings. This is just an example of some content changing, replace it with whatever you like.
-  <br>
-  Cheers.
-  <br>
-  <br>
-  Click this to change the content: <button (click)="changeContent()">Click Me</button>
+<div class="navBar">
+    <button routerLink="/picture-content">
+        Picture Content
+    </button>
+    <button routerLink="/text-content">
+        Text Content
+    </button>
+    <button routerLink="/vertical-content">
+        Vertical Content
+    </button>
+    <button routerLink="/horizontal-content">
+        Horizontal Content
+    </button>
 </div>
 <router-outlet></router-outlet>
