@@ -1,4 +1,6 @@
-import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import * as uuid from 'uuid';
+import { ContentScrollService } from '../content-scroll.service';
 
 const ONE_SECOND: number = 1000;
 
@@ -8,7 +10,7 @@ const ONE_SECOND: number = 1000;
   styleUrls: ['./content-scroll.component.css']
 })
 
-export class ContentScrollComponent implements AfterContentInit, OnDestroy {
+export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnInit{
   public isTouchDevice: boolean = 'ontouchstart' in window;
 
   public hasVerticalScroll: boolean = false;
@@ -16,18 +18,26 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
 
   public mutationObserver: MutationObserver;
 
+  private _componentUUID: string = undefined;
+
   @ViewChild('content') content: ElementRef;
   @ViewChild('wrapper') wrapper: ElementRef;
 
-  constructor() {
+  constructor(private contentScrollService: ContentScrollService) {
     this.mutationObserver = new MutationObserver(() => {
         this.initScroll();
     });
   }
 
+  public ngOnInit() {
+    // TODO: init id on component it with service
+    // this.contentScrollService create Map 
+  }
+
   public ngAfterContentInit(): void {
     this.initScroll();
     this.initMutationObserver();
+    this.setComponentUUID();
   }
 
   public ngOnDestroy(): void {
@@ -41,7 +51,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
     setTimeout(() => {
       this.hasHorizontalScroll = this.content.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
       this.hasVerticalScroll = this.content.nativeElement.scrollHeight > this.wrapper.nativeElement.clientHeight;
-    }, this.isContentSlowToRender() ? 0 : 0);
+    }, this.isContentSlowToRender() ? ONE_SECOND : 0);
   }
 
   /**
@@ -125,6 +135,20 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy {
    */
   public scrollRight(): void {
     this.wrapper.nativeElement.scrollLeft += this.wrapper.nativeElement.clientWidth;
+  }
+
+  /**
+   * Method to retrieve the unique universal identifier generated for the component
+   */
+  public getComponentUUID() {
+    return this._componentUUID;
+  }
+
+  /**
+   * Method to generate the unique universal identifier for the component
+   */
+  private setComponentUUID() {
+    this._componentUUID = uuid();
   }
 
   /**
