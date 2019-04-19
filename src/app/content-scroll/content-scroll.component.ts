@@ -1,6 +1,9 @@
 import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import * as uuid from 'uuid';
 import { ContentScrollService } from '../content-scroll.service';
+import { Router } from '@angular/router';
+import { ComponentInstance } from '@angular/core/src/render3/interfaces/player';
+import { ContentScrollInstance } from '../content-scroll-instance';
 
 const ONE_SECOND: number = 1000;
 
@@ -18,26 +21,28 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
 
   public mutationObserver: MutationObserver;
 
-  private _componentUUID: string = undefined;
-
   @ViewChild('content') content: ElementRef;
   @ViewChild('wrapper') wrapper: ElementRef;
 
-  constructor(private contentScrollService: ContentScrollService) {
+  private _componentIdentifier: string = undefined;
+  private _parentElementUniqueAttribute: string = undefined;
+
+  constructor(private contentScrollService: ContentScrollService, private router: Router) {
     this.mutationObserver = new MutationObserver(() => {
         this.initScroll();
     });
   }
 
   public ngOnInit() {
-    // TODO: init id on component it with service
-    // this.contentScrollService create Map 
+    this.setComponentIdentifier();
+    this.checkStoreForComponentIdentifier();
+    console.log(this.content.nativeElement.parentElement.offsetParent.parentNode.attributes[0]);
   }
 
   public ngAfterContentInit(): void {
     this.initScroll();
     this.initMutationObserver();
-    this.setComponentUUID();
+    this.getComponentIdentifier();
   }
 
   public ngOnDestroy(): void {
@@ -140,15 +145,43 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
   /**
    * Method to retrieve the unique universal identifier generated for the component
    */
-  public getComponentUUID() {
-    return this._componentUUID;
+  public getComponentIdentifier() {
+    return this._componentIdentifier;
   }
 
   /**
-   * Method to generate the unique universal identifier for the component
+   * Method to drill out of the component instance and find a unique attribute to identify the component
+   * 
+   * This attribute doesn't change
    */
-  private setComponentUUID() {
-    this._componentUUID = uuid();
+  private setComponentIdentifier() {
+    this._componentIdentifier = this.wrapper.nativeElement.offsetParent.parentNode.attributes[0];
+    console.log(JSON.stringify(this._componentIdentifier));
+    this._componentIdentifier.toString().slice(0, -3);
+    console.log('set: ', this._componentIdentifier);
+  }
+
+  private checkStoreForComponentIdentifier() {
+    // TODO: contentScrollService.find in map by unique identifier and restore scroll position
+    const instance = this.contentScrollService.findInstanceInStore(this._componentIdentifier);
+    if (instance) {
+      console.log('found it');
+      // TODO: set vert/hor scroll position
+      return;
+    }
+    this.contentScrollService.upsertInstanceToStore(
+      this.getComponentIdentifier(),
+      this.generateComponentInstance()
+    );
+    console.log('did not find it');
+  }
+
+  public generateComponentInstance(): ContentScrollInstance {
+    return {
+      url: this.router.url,
+      horizontalScrollPosition: this.wrapper.nativeElement.scrollLeft,
+      verticalScrollPosition: this.wrapper.nativeElement.scrollTop
+    };
   }
 
   /**

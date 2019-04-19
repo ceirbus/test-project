@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Router, RouterEvent, NavigationStart, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { ContentScrollInstance } from './content-scroll-instance';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContentScrollService {
 
-  // TODO: create component instance array with url/uuid/x and y scroll positions
+  private _contentScrollComponentInstanceStore: Map<string, ContentScrollInstance> = new Map();
+
+  // TODO: create directive to add unique id from this service to each content scroll instance so we can pull it from the DOM
 
   constructor(private router: Router) {
     this.initialize();
@@ -19,6 +22,16 @@ export class ContentScrollService {
   public initialize() {
     this.listenNavigationStart();
     this.listenNavigationEnd();
+  }
+
+  public upsertInstanceToStore(id: string, instance: ContentScrollInstance) {
+    this._contentScrollComponentInstanceStore.set(id, instance);
+    console.log('upsert instance: ', this._contentScrollComponentInstanceStore);
+  }
+
+  public findInstanceInStore(id): ContentScrollInstance | undefined {
+    console.log('find instance: ', this._contentScrollComponentInstanceStore);
+    return this._contentScrollComponentInstanceStore.get(id);
   }
 
    /**
