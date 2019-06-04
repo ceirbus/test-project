@@ -1,4 +1,5 @@
 <div class="wrapper"
+  (scroll)="saveScroll($event)"
   #wrapper
   [ngClass]="{
     'verticalScrollArea': hasVerticalScroll,

@@ -1,8 +1,6 @@
 import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
-import * as uuid from 'uuid';
 import { ContentScrollService } from '../content-scroll.service';
 import { Router } from '@angular/router';
-import { ComponentInstance } from '@angular/core/src/render3/interfaces/player';
 import { ContentScrollInstance } from '../content-scroll-instance';
 
 const ONE_SECOND: number = 1000;
@@ -13,7 +11,7 @@ const ONE_SECOND: number = 1000;
   styleUrls: ['./content-scroll.component.css']
 })
 
-export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnInit{
+export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnInit {
   public isTouchDevice: boolean = 'ontouchstart' in window;
 
   public hasVerticalScroll: boolean = false;
@@ -25,24 +23,31 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
   @ViewChild('wrapper') wrapper: ElementRef;
 
   private _componentIdentifier: string = undefined;
-  private _parentElementUniqueAttribute: string = undefined;
 
-  constructor(private contentScrollService: ContentScrollService, private router: Router) {
+  constructor(
+    private contentScrollService: ContentScrollService,
+    private router: Router
+    ) { 
     this.mutationObserver = new MutationObserver(() => {
+        // when the content is mutated, re-init the scroll position
         this.initScroll();
     });
   }
 
+  /**
+   * for demo only
+   */
+  public toggleTouch(): void {
+    this.isTouchDevice = !this.isTouchDevice;
+  }
+
   public ngOnInit() {
-    this.setComponentIdentifier();
-    this.checkStoreForComponentIdentifier();
-    console.log(this.content.nativeElement.parentElement.offsetParent.parentNode.attributes[0]);
+    this._setComponentIdentifier();
   }
 
   public ngAfterContentInit(): void {
     this.initScroll();
     this.initMutationObserver();
-    this.getComponentIdentifier();
   }
 
   public ngOnDestroy(): void {
@@ -56,13 +61,14 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
     setTimeout(() => {
       this.hasHorizontalScroll = this.content.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
       this.hasVerticalScroll = this.content.nativeElement.scrollHeight > this.wrapper.nativeElement.clientHeight;
+      this._initScrollRestoration();
     }, this.isContentSlowToRender() ? ONE_SECOND : 0);
   }
 
   /**
    * Method to determine if the content is slow/not loading quickly by checking height and width.
    * This could mean that no content is inside the element but it is optimistic to think there should be content
-   * @returns {boolean} value to determine if height/width is 0
+   * @returns {boolean} value to determine if height or width is 0
    */
   public isContentSlowToRender(): boolean {
     const noWidthLoaded = this.content.nativeElement.scrollWidth === 0;
@@ -143,40 +149,35 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
   }
 
   /**
-   * Method to retrieve the unique universal identifier generated for the component
+   * Method to update the scroll positions of the component instance, fires on scroll $event
    */
-  public getComponentIdentifier() {
-    return this._componentIdentifier;
+  public saveScroll(): void {
+    this.contentScrollService.upsert(
+      this._getComponentIdentifier(),
+      this._generateComponentInstance()
+    );
   }
 
   /**
-   * Method to drill out of the component instance and find a unique attribute to identify the component
-   * 
-   * This attribute doesn't change
+   * Method to retrieve the unique universal identifier generated for the component
+   * @returns {string} the component identifier
    */
-  private setComponentIdentifier() {
-    this._componentIdentifier = this.wrapper.nativeElement.offsetParent.parentNode.attributes[0];
-    console.log(JSON.stringify(this._componentIdentifier));
-    this._componentIdentifier.toString().slice(0, -3);
-    console.log('set: ', this._componentIdentifier);
+  private _getComponentIdentifier(): string {
+    return this._componentIdentifier;
+  }
+  
+  /**
+   * Method to drill out of the component instance and find the DI token to identify it
+   */
+  private _setComponentIdentifier(): void {
+    this._componentIdentifier = this.wrapper.nativeElement.offsetParent.parentNode.attributes[0].name;
   }
 
-  private checkStoreForComponentIdentifier() {
-    // TODO: contentScrollService.find in map by unique identifier and restore scroll position
-    const instance = this.contentScrollService.findInstanceInStore(this._componentIdentifier);
-    if (instance) {
-      console.log('found it');
-      // TODO: set vert/hor scroll position
-      return;
-    }
-    this.contentScrollService.upsertInstanceToStore(
-      this.getComponentIdentifier(),
-      this.generateComponentInstance()
-    );
-    console.log('did not find it');
-  }
-
-  public generateComponentInstance(): ContentScrollInstance {
+  /**
+   * Method to create a component instance to restore
+   * @returns {ContentScrollInstance} the generated component instance
+   */
+  private _generateComponentInstance(): ContentScrollInstance {
     return {
       url: this.router.url,
       horizontalScrollPosition: this.wrapper.nativeElement.scrollLeft,
@@ -185,9 +186,16 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
   }
 
   /**
-   * for demo only
+   * Method to save initial/restore the scroll position of the content-scroll instance
    */
-  public toggleTouch() {
-    this.isTouchDevice = !this.isTouchDevice;
+  private _initScrollRestoration(): void {
+    // check if the Map has an entry already
+    const instance: ContentScrollInstance = this.contentScrollService.find(this._getComponentIdentifier());
+
+    // if we have an entry in the Map restore scroll position
+    if (instance) {
+      this.wrapper.nativeElement.scrollTop = instance.verticalScrollPosition;
+      this.wrapper.nativeElement.scrollLeft = instance.horizontalScrollPosition;
+    }
   }
 }
