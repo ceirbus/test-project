@@ -3,13 +3,11 @@
  */
 
 export interface IContentScrollInstance {
-    url: string; // where this component lives, may also include params
     horizontalScrollPosition: number;
     verticalScrollPosition: number;
 }
 
 export class ContentScrollInstance implements IContentScrollInstance {
-    url: string = '';
     horizontalScrollPosition: 0;
     verticalScrollPosition: 0;
 }

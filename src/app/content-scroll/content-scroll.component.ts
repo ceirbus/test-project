@@ -1,6 +1,5 @@
 import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ContentScrollService } from '../content-scroll.service';
-import { Router } from '@angular/router';
 import { ContentScrollInstance } from '../content-scroll-instance';
 
 const ONE_SECOND: number = 1000;
@@ -13,7 +12,6 @@ const ONE_SECOND: number = 1000;
 
 export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnInit {
   public isTouchDevice: boolean = 'ontouchstart' in window;
-
   public hasVerticalScroll: boolean = false;
   public hasHorizontalScroll: boolean = false;
 
@@ -24,10 +22,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
 
   private _componentIdentifier: string = undefined;
 
-  constructor(
-    private contentScrollService: ContentScrollService,
-    private router: Router
-    ) { 
+  constructor(private contentScrollService: ContentScrollService) {
     this.mutationObserver = new MutationObserver(() => {
         // when the content is mutated, re-init the scroll position
         this.initScroll();
@@ -179,7 +174,6 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
    */
   private _generateComponentInstance(): ContentScrollInstance {
     return {
-      url: this.router.url,
       horizontalScrollPosition: this.wrapper.nativeElement.scrollLeft,
       verticalScrollPosition: this.wrapper.nativeElement.scrollTop
     };
