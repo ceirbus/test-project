@@ -1,8 +1,8 @@
-import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { ContentScrollService } from '../content-scroll.service';
 import { ContentScrollInstance } from '../content-scroll-instance';
 
-const ONE_SECOND: number = 1000;
+const ONE_SECOND: number = 1000; // modify as necessary
 
 @Component({
   selector: 'content-scroll',
@@ -21,6 +21,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
   @ViewChild('wrapper') wrapper: ElementRef;
 
   private _componentIdentifier: string = undefined;
+  private _canCheckScroll: boolean = true; // delimiter for the scroll $event
 
   constructor(private contentScrollService: ContentScrollService) {
     this.mutationObserver = new MutationObserver(() => {
@@ -145,12 +146,23 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
 
   /**
    * Method to update the scroll positions of the component instance, fires on scroll $event
+   * This method is delimited by 250 ms to improve performance and reduce redundant saves
    */
   public saveScroll(): void {
-    this.contentScrollService.upsert(
-      this._getComponentIdentifier(),
-      this._generateComponentInstance()
-    );
+    if (!this._canCheckScroll) {
+      return;
+    }
+
+    this._canCheckScroll = false;
+
+    // rate limit the save to once per 250ms
+    setTimeout(() => {
+      this.contentScrollService.upsert(
+        this._getComponentIdentifier(),
+        this._generateComponentInstance()
+      );
+      this._canCheckScroll = true;
+    }, 250);
   }
 
   /**

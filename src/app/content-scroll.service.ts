@@ -12,6 +12,8 @@ export class ContentScrollService {
 
   /**
    * Method to update an existing or add a new content-scroll instance to our Map
+   * @param {string} id the DI token value
+   * @param {ContentScrollInstance} instance see properties
    */
   public upsert(id: string, instance: ContentScrollInstance) {
     this._contentScrollComponentInstanceStore.set(id, instance);
