@@ -4,7 +4,9 @@
   [ngClass]="{
     'verticalScrollArea': hasVerticalScroll,
     'horizontalScrollArea': hasHorizontalScroll,
-    'hideScrollBars': isTouchDevice
+    'hideScrollBars': isTouchDevice,
+    'noVerticalScroll': !hasVerticalScroll,
+    'noHorizontalScroll': !hasHorizontalScroll
   }">
   <div class="content" #content>
     <ng-content></ng-content>

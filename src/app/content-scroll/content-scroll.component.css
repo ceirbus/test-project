@@ -38,9 +38,20 @@
 }
 
 .content {
+    padding: .2em;
     display: flex;
     position: absolute;
     flex-grow: 1; 
+}
+
+.noVerticalScroll::-webkit-scrollbar:vertical {
+    height: 0;
+    width: 0;
+}
+
+.noHorizontalScroll::-webkit-scrollbar:horizontal {
+    height: 0;
+    width: 0;
 }
 
 .verticalScrollArea {
