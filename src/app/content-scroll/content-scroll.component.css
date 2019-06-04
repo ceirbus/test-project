@@ -38,7 +38,6 @@
 }
 
 .content {
-    padding: .2em;
     display: flex;
     position: absolute;
     flex-grow: 1; 
