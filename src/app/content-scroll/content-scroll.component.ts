@@ -2,7 +2,9 @@ import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit, 
 import { ContentScrollService } from '../content-scroll.service';
 import { ContentScrollInstance } from '../content-scroll-instance';
 
-const ONE_SECOND: number = 1000; // modify as necessary
+// modify time constants as necessary
+const ONE_SECOND: number = 1000;
+const QUARTER_OF_ONE_SECOND: number = 250;
 
 @Component({
   selector: 'content-scroll',
@@ -162,7 +164,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
         this._generateComponentInstance()
       );
       this._canCheckScroll = true;
-    }, 250);
+    }, QUARTER_OF_ONE_SECOND);
   }
 
   /**
