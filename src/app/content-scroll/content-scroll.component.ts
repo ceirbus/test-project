@@ -25,12 +25,7 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
   private _componentIdentifier: string = undefined;
   private _canCheckScroll: boolean = true; // delimiter for the scroll $event
 
-  constructor(private contentScrollService: ContentScrollService) {
-    this.mutationObserver = new MutationObserver(() => {
-        // when the content is mutated, re-init the scroll position
-        this.initScroll();
-    });
-  }
+  constructor(private contentScrollService: ContentScrollService) { }
 
   /**
    * for demo only
@@ -78,6 +73,20 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
    * Method to initialize the MutationObserver that detects changes to the content and updates the controls
    */
   public initMutationObserver(): void {
+    this.mutationObserver = new MutationObserver((mutationsList: MutationRecord[]) => {
+      for(var mutation of mutationsList) {
+        if (mutation.type === 'childList'
+          && mutation.addedNodes.length
+          && this.hasVerticalScroll) {
+          // if a node was added to the childList and we can scroll vertically
+          this.scrollBottomEdge();
+          this._forceSaveScroll();
+        }
+      }
+      // when the content is mutated, re-init the scroll position
+      this.initScroll();
+    });
+
     const config: MutationObserverInit = {
       attributes: true,
       childList: true,
@@ -166,6 +175,16 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
       );
       this._canCheckScroll = true;
     }, QUARTER_OF_ONE_SECOND);
+  }
+  /**
+   * Method to update the scroll positions of the component instance
+   * This method is NOT delimited by 250 ms, this forces the save
+   */
+  private _forceSaveScroll(): void {
+    this.contentScrollService.upsert(
+      this._getComponentIdentifier(),
+      this._generateComponentInstance()
+    );
   }
 
   /**
