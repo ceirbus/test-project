@@ -2,8 +2,8 @@
   (scroll)="saveScroll()"
   #wrapper
   [ngClass]="{
-    'verticalScrollArea': hasVerticalScroll,
-    'horizontalScrollArea': hasHorizontalScroll,
+    'verticalScrollArea': hasVerticalScroll && isTouchDevice,
+    'horizontalScrollArea': hasHorizontalScroll && isTouchDevice,
     'hideScrollBars': isTouchDevice,
     'noVerticalScroll': !hasVerticalScroll,
     'noHorizontalScroll': !hasHorizontalScroll

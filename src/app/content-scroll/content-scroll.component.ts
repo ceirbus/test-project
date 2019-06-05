@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit, HostListener } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { ContentScrollService } from '../content-scroll.service';
 import { ContentScrollInstance } from '../content-scroll-instance';
 
@@ -81,7 +81,8 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
     const config: MutationObserverInit = {
       attributes: true,
       childList: true,
-      characterData: true
+      characterData: true,
+      subtree: true
     }
 
     try {
