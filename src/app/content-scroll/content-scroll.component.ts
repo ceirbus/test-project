@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ContentScrollService } from '../content-scroll.service';
 import { ContentScrollInstance } from '../content-scroll-instance';
 
@@ -25,7 +25,9 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
   private _componentIdentifier: string = undefined;
   private _canCheckScroll: boolean = true; // delimiter for the scroll $event
 
-  constructor(private contentScrollService: ContentScrollService) { }
+  constructor(private contentScrollService: ContentScrollService,
+              private elementRef: ElementRef
+              ) { }
 
   /**
    * for demo only
@@ -196,10 +198,14 @@ export class ContentScrollComponent implements AfterContentInit, OnDestroy, OnIn
   }
   
   /**
-   * Method to drill out of the component instance and find the DI token to identify it
+   * Method to drill into the element and find the DI token to identify it
    */
   private _setComponentIdentifier(): void {
-    this._componentIdentifier = this.wrapper.nativeElement.offsetParent.parentNode.attributes[0].name;
+    const elementAttributes: NamedNodeMap = this.elementRef.nativeElement.attributes;
+
+    const tokenAttribute: Attr = elementAttributes.item(elementAttributes.length - 1);
+
+    this._componentIdentifier = tokenAttribute.name;
   }
 
   /**
