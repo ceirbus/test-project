@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ContentScrollService } from '../content-scroll.service';
-import { ContentScrollInstance } from '../content-scroll-instance';
+import { ContentScrollService } from '../../services/content-scroll.service';
+import { ContentScrollInstance } from '../../models/content-scroll-instance';
 
 // modify time constants as necessary
 const ONE_SECOND: number = 1000;

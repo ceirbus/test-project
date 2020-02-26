@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ContentScrollInstance } from './content-scroll-instance';
+import { ContentScrollInstance } from '../models/content-scroll-instance';
 
 @Injectable({
   providedIn: 'root'
